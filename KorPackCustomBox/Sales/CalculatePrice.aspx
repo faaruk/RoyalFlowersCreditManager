@@ -1,0 +1,974 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true"
+    CodeFile="CalculatePrice.aspx.cs" Inherits="Sales_DirGroup" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
+    <script type="text/javascript">
+        function CheckIfLoggedIn() {
+            var _UserID = '<% =Session["UserID"] %>';
+            if (_UserID.length == 0)
+            { alert('Please sign in. Thank you.'); return false; }
+        }
+        function resetValues() {
+            $('#ctl00_ContentPlaceHolder1_txtSquareFootEach').val(0);
+            $('#ctl00_ContentPlaceHolder1_txtTotalFootEach').val(0);
+            $('#ctl00_ContentPlaceHolder1_txtCWidth').val(0);
+            $('#ctl00_ContentPlaceHolder1_txtCLength').val(0);
+
+            $('#ctl00_ContentPlaceHolder1_HowmanyOut').text(0);
+            $('#ctl00_ContentPlaceHolder1_stdglue').text(0);
+            $('#ctl00_ContentPlaceHolder1_glueupcharge').text(0);
+            $('#ctl00_ContentPlaceHolder1_totalGlue').text(0);
+
+            $('#ctl00_ContentPlaceHolder1_EstimatedGlueTime').text(0);
+            $('#ctl00_ContentPlaceHolder1_A125').text(0);
+            $('#ctl00_ContentPlaceHolder1_upcharge').text(0);
+            $('#ctl00_ContentPlaceHolder1_EstimatedCutTime').text(0);
+
+            $('#ctl00_ContentPlaceHolder1_EstimatedGlueTimeHours').text(0);
+            $('#ctl00_ContentPlaceHolder1_EstimatedCutTimeHours').text(0);
+            $('#ctl00_ContentPlaceHolder1_ChargableSqft').text(0);
+            $('#ctl00_ContentPlaceHolder1_ChargableTotalSqft').text(0);
+
+            $('#ctl00_ContentPlaceHolder1_TotalFreight').text(0);
+            $('#ctl00_ContentPlaceHolder1_MSFUsed').text(0);
+            $('#ctl00_ContentPlaceHolder1_FreightPerea').text(0);
+            $('#ctl00_ContentPlaceHolder1_MaterialCharge').text(0);
+
+            $('#ctl00_ContentPlaceHolder1_LaborCharge').text(0);
+            $('#ctl00_ContentPlaceHolder1_SetupPerBox').text(0);
+            $('#ctl00_ContentPlaceHolder1_FinalEachPrice').text(0);
+            $('#ctl00_ContentPlaceHolder1_TotalForThisQty').text(0);
+        }
+        function SetQuoteValuesToRFQ() {
+            var _Style = $('#ctl00_ContentPlaceHolder1_lblStyle').text();
+            $("#ctl00_ContentPlaceHolder1_ddlStyleRFQ").val(_Style);
+            $("#ctl00_ContentPlaceHolder1_ddlStylePO").val(_Style);
+            
+            var _Qty = $('#ctl00_ContentPlaceHolder1_txtQty').val();
+            $('#ctl00_ContentPlaceHolder1_txtQtyRFQ').val(_Qty);
+            $('#ctl00_ContentPlaceHolder1_txtQtyPO').val(_Qty);
+            var _Length = $('#ctl00_ContentPlaceHolder1_txtLength').val();
+            $('#ctl00_ContentPlaceHolder1_txtLengthRFQ').val(_Length);
+            $('#ctl00_ContentPlaceHolder1_txtLengthPO').val(_Length);
+            var _Width = $('#ctl00_ContentPlaceHolder1_txtWidth').val();
+            $('#ctl00_ContentPlaceHolder1_txtWidthRFQ').val(_Width);
+            $('#ctl00_ContentPlaceHolder1_txtWidthPO').val(_Width);
+            var _Height = $('#ctl00_ContentPlaceHolder1_txtheight').val();
+            $('#ctl00_ContentPlaceHolder1_txtheightRFQ').val(_Height);
+            $('#ctl00_ContentPlaceHolder1_txtheightPO').val(_Height);
+
+            var _BroadGrade = $('#ctl00_ContentPlaceHolder1_ddlBroadGrade').val();
+            $("#ctl00_ContentPlaceHolder1_ddlBroadGradeRFQ").val(_BroadGrade);
+            $("#ctl00_ContentPlaceHolder1_ddlBroadGradePO").val(_BroadGrade);
+            var _Flip = $('#ctl00_ContentPlaceHolder1_ddlFlip').val();
+            $('#ctl00_ContentPlaceHolder1_ddlFlipRFQ').val(_Flip);
+            $('#ctl00_ContentPlaceHolder1_ddlFlipPO').val(_Flip);
+            var _Truck = $('#ctl00_ContentPlaceHolder1_txtTruck').val();
+            $('#ctl00_ContentPlaceHolder1_txtTruckRFQ').val(_Truck);
+            $('#ctl00_ContentPlaceHolder1_txtTruckPO').val(_Truck);
+            var _OveLap = $('#ctl00_ContentPlaceHolder1_txtOveLap').val();
+            $('#ctl00_ContentPlaceHolder1_txtOveLapRFQ').val(_OveLap);
+            $('#ctl00_ContentPlaceHolder1_txtOveLapPO').val(_OveLap);
+            var _Perforated = $('#ctl00_ContentPlaceHolder1_ddlPerforated').val();
+            $('#ctl00_ContentPlaceHolder1_ddlPerforatedRFQ').val(_Perforated);
+            $('#ctl00_ContentPlaceHolder1_ddlPerforatedPO').val(_Perforated);
+            $("#ctl00_ContentPlaceHolder1_ddlStyleRFQ").change();
+            $("#ctl00_ContentPlaceHolder1_ddlStylePO").change();
+        }
+        function bindOnKeyUp1() {
+            resetValues();
+            SetQuoteValuesToRFQ();
+            var _Style = $('#ctl00_ContentPlaceHolder1_lblStyle').text(); //$('#ctl00_ContentPlaceHolder1_ddlStyle').val();
+
+            if (_Style == "2") {
+                $('#divBkf').show();
+            }
+            else {
+                $('#divBkf').hide();
+            }
+            if (_Style == "3") {
+                $('#lblH').hide();
+                $('#divX').hide();
+                $('#ctl00_ContentPlaceHolder1_txtheight').hide();
+                $('#llbL').text('W Corr Dir.');
+                $('#lblW').text('L');
+            }
+            else {
+                $('#lblH').show();
+                $('#divX').show();
+                $('#ctl00_ContentPlaceHolder1_txtheight').show();
+                $('#llbL').text('L');
+                $('#lblW').text('W');
+            }
+
+            return false;
+        }
+        function bindOnKeyUpForRFQDDL() {
+            var _Style = $('#ctl00_ContentPlaceHolder1_ddlStyleRFQ').val();
+
+            if (_Style == "2") {
+                $('#divBkfRFQ').show();
+            }
+            else {
+                $('#divBkfRFQ').hide();
+            }
+            if (_Style == "3") {
+                $('#lblHRFQ').hide();
+                $('#divXRFQ').hide();
+                $('#ctl00_ContentPlaceHolder1_txtheightRFQ').hide();
+                $('#llbLRFQ').text('W Corr Dir.');
+                $('#lblWRFQ').text('L');
+            }
+            else {
+                $('#lblHRFQ').show();
+                $('#divXRFQ').show();
+                $('#ctl00_ContentPlaceHolder1_txtheightRFQ').show();
+                $('#llbLRFQ').text('L');
+                $('#lblWRFQ').text('W');
+            }
+            return false;
+        }
+        function bindOnKeyUpForPODDL() {
+            var _Style = $('#ctl00_ContentPlaceHolder1_ddlStylePO').val();
+
+            if (_Style == "2") {
+                $('#divBkfPO').show();
+            }
+            else {
+                $('#divBkfPO').hide();
+            }
+            if (_Style == "3") {
+                $('#lblHPO').hide();
+                $('#divXPO').hide();
+                $('#ctl00_ContentPlaceHolder1_txtheightPO').hide();
+                $('#llbLPO').text('W Corr Dir.');
+                $('#lblWPO').text('L');
+            }
+            else {
+                $('#lblHPO').show();
+                $('#divXPO').show();
+                $('#ctl00_ContentPlaceHolder1_txtheightPO').show();
+                $('#llbLPO').text('L');
+                $('#lblWPO').text('W');
+            }
+            return false;
+        }
+        function bindOnKeyUp() {
+            resetValues();
+            var _UserID = '<% =Session["UserID"] %>';
+
+            if (_UserID.length == 0)
+            { alert('Please Sign In to calculate price. Thank you.'); return false; }
+            else {
+
+                var _Qty = $('#ctl00_ContentPlaceHolder1_txtQty').val();
+                if ((_Qty.length == 0) || (_Qty == "0")) {
+                    return;
+                }
+                var _Length = $('#ctl00_ContentPlaceHolder1_txtLength').val();
+                if ((_Length.length == 0) || (_Length == "0")) {
+                    return;
+                }
+                var _Width = $('#ctl00_ContentPlaceHolder1_txtWidth').val();
+                if ((_Width.length == 0) || (_Width == "0")) {
+                    return;
+                }
+                var _Height = $('#ctl00_ContentPlaceHolder1_txtheight').val();
+                if ((_Height.length == 0) || (_Height == "0")) {
+                    _Height = 0;
+                }
+                var _Style = $('#ctl00_ContentPlaceHolder1_lblStyle').text(); //$('#ctl00_ContentPlaceHolder1_ddlStyle').val();
+                //var _Style = reply_click(this.id);
+                var _BroadGrade = $('#ctl00_ContentPlaceHolder1_ddlBroadGrade').val();
+                var _Flip = $('#ctl00_ContentPlaceHolder1_ddlFlip').val();
+                //var _Customer = $('#ctl00_ContentPlaceHolder1_ddlCustomer').val();
+                var _Customer = $('#ctl00_ContentPlaceHolder1_lblCustomer').text();
+
+                var _Truck = $('#ctl00_ContentPlaceHolder1_txtTruck').val();
+                if ((_Truck.length == 0) || (_Truck == "0")) {
+                    _Truck = 0;
+                }
+                var _OveLap = $('#ctl00_ContentPlaceHolder1_txtOveLap').val();
+                if ((_OveLap.length == 0) || (_OveLap == "0")) {
+                    _OveLap = 0;
+                }
+                var _Perforated = $('#ctl00_ContentPlaceHolder1_ddlPerforated').val();
+                if (_Style == "2") {
+                    $('#divBkf').show();
+                }
+                else {
+                    $('#divBkf').hide();
+                }
+                var _Image = $('#ctl00_ContentPlaceHolder1_Image').val();
+
+                if (_Style == "3") {
+                    $('#lblH').hide();
+                    $('#divX').hide();
+                    $('#ctl00_ContentPlaceHolder1_txtheight').hide();
+                    $('#llbL').text('W Corr Dir.');
+                    $('#lblW').text('L');
+                }
+                else {
+                    $('#lblH').show();
+                    $('#divX').show();
+                    $('#ctl00_ContentPlaceHolder1_txtheight').show();
+                    $('#llbL').text('L');
+                    $('#lblW').text('W');
+                }
+                var _RoleID = '<% =Session["RoleID"] %>';
+                //alert(_RoleID);
+                var _callFrom = "0";
+                var _PCAutoId = "0";
+                if ((_RoleID == "18") || (_RoleID == "4")) {
+                    _callFrom = "1";
+                    _PCAutoId = $('#ctl00_ContentPlaceHolder1_ddlPriceClass').val();
+                }
+                else {
+                    _callFrom = "0";
+                    _PCAutoId = "0";
+                }
+                //alert(_PCAutoId);
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "../WebService/WebService.asmx/GetCalculations",
+                    data: "{ Qty: '" + _Qty + "', Length: '" + _Length + "', Width: '" + _Width + "',Height: '" + _Height + "',StyleId: '" + _Style + "',Strength: '" + _BroadGrade + "',FlipCorrDir: '" + _Flip + "',CustomersId: '" + _Customer + "',OverLap: '" + _OveLap + "',Truck: '" + _Truck + "',Perforated:'" + _Perforated + "',callFrom: '" + _callFrom + "',PCAutoId:'" + _PCAutoId + "'}",
+                    dataType: "json",
+                    success: function (data) {
+                        //data = $.parseJSON(data); //parse if return JavaScriptSerializer().Serialize
+
+                        //alert(data.d);
+                        var data1 = data.d;
+                        //alert(typeof (data1)); //it comes out to be Object
+                        ////no need to parse now if dont return JavaScriptSerializer().Serialize
+                        //alert(data1.FinalEachPrice);
+
+
+                        //alert(data.FinalEachPrice);
+                        $('#ctl00_ContentPlaceHolder1_FinalEachPrice').text(data1.FinalEachPrice);
+                        $('#ctl00_ContentPlaceHolder1_TotalForThisQty').text(data1.TotalForThisQty);
+                        $('#ctl00_ContentPlaceHolder1_lblCBHAutoId').text(data1.CBHAutoId);
+                        $('#ctl00_ContentPlaceHolder1_lblFinalPriceEachPO').text(data1.FinalEachPrice);
+                        $('#ctl00_ContentPlaceHolder1_lblTotalPricePO').text(data1.TotalForThisQty);
+                        
+                        
+                        //$('#ctl00_ContentPlaceHolder1_FinalEachPrice').text(data[22]);
+                        //$('#ctl00_ContentPlaceHolder1_TotalForThisQty').text(data[23]);
+                        //$('#ctl00_ContentPlaceHolder1_lblCBHAutoId').text(data[24]);
+                    },
+                    failure: function (data) {
+                        alert(data);
+                    }
+                });
+                return false;
+            }
+        }
+
+        function reply_click(clicked_id, stylename) {
+            //lblStyleSelected
+            $('#defaultImg').hide();
+            $('#imgLoad').html("");
+            $('#imgLoad').append("<img src='../Images/box/" + clicked_id + "-L.png' class='img-responsive'/>"); //height='250px'
+            $('#ctl00_ContentPlaceHolder1_lblStyle').text(clicked_id);
+            $('#ctl00_ContentPlaceHolder1_lblStyleSelected').text(stylename);
+            bindOnKeyUp1();
+            //return clicked_id;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            initializeHoverHelp();
+        });
+
+        function initializeHoverHelp() {
+            $('.helpHover').tooltip({
+                track: false,
+                delay: 0,
+                showURL: false,
+                showBody: true,
+                top: 5,
+                extraClass: "calculatorHelpPlacement",
+                fade: 1,
+                opacity: -1.0,
+                transparency: 0
+            });
+        }
+    </script>
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="Server">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="col-lg-11 col-md-11 col-sm-12 col-xs-12 col-lg-offset-1 col-md-offset-1">
+                    <div class="thumbnail" style="min-height: 465px; padding: 20px; font-weight: 600;">
+                        <p class="quicKor-header text-left">
+                            <a href="http://www.korpack.com/packaging-solutions/quickor/" target="_blank">Our On Demand QuicKor</a>
+                            <br />
+                            machine provides you with:
+                        </p>
+                        <ul class="home_ul_space">
+                            <li>Flexibility that before was only a dream</li>
+                            <li>No worries about
+                            <br />
+                                minimums</li>
+                            <li>Boxes being created within<br />
+                                seconds with your specific<br />
+                                dimensions/board grade</li>
+                            <li>No tooling or lead time</li>
+                            <li>Next or same day delivery</li>
+                        </ul>
+                        If you need a quote on a large quantity, custom printing, or any other custom design, please click <a href="mailto:quotes@korpack.com">here</a>.
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <div class="bs-callout bs-callout-info">
+                    <h4>Choose Your Box Style</h4>
+                    <div class="row">
+                        <div class="col-md-12" style="text-align: center">
+                            <img src="../Images/box/1.png" id="1" alt="RSC" width="120" height="120" onclick="reply_click(this.id, this.title)"
+                                title="RSC" />
+                            <img src="../Images/box/2.png" id="2" alt="BKF" width="100" onclick="reply_click(this.id, this.title)"
+                                title="Bookfold" />
+                            <img src="../Images/box/4.png" id="4" alt="FOL" width="100" onclick="reply_click(this.id, this.title)"
+                                title="FOL" />
+                            <img src="../Images/box/5.png" id="5" alt="HSC" width="100" onclick="reply_click(this.id, this.title)"
+                                title="HSC" />
+                            <img src="../Images/box/3.png" id="3" alt="Pad" width="100" onclick="reply_click(this.id, this.title)"
+                                title="Pad/Scored Pad" />
+                            <img src="../Images/box/10.png" id="10" alt="5PF" width="100" onclick="reply_click(this.id, this.title)"
+                                title="5 Panel Folder" />
+                            <img src="../Images/box/7.png" id="7" alt="Tele Top" width="100" onclick="reply_click(this.id, this.title)"
+                                title="Tele Tray Set" />
+                            <%--<img src="../Images/box/6.jpg" id="6" alt="Tele Btm" width="68" onclick="reply_click(this.id, this.title)" title="Tray Bottom" />--%>
+                            <%--<img src="../Images/box/8.jpg" id="8" alt="Tube" width="68" onclick="reply_click(this.id, this.title)" title="Tube" />
+                            <img src="../Images/box/9.jpg" id="9" alt="HSC FOL BTM" width="68" onclick="reply_click(this.id, this.title)" title="HSC" />
+                            <img src="../Images/box/11.jpg" id="11" alt="STD 5PF" width="68" onclick="reply_click(this.id, this.title)" title="STD 5PF" />--%>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="bs-callout bs-callout-danger">
+                    <h4>Inside Dimensions</h4>
+                    <div class="row" runat="server" id="rwPriceClass">
+                        <div class="col-md-2 text-right">
+                            Price Class:
+                        </div>
+                        <div class="col-md-2">
+                            <asp:DropDownList ID="ddlPriceClass" runat="server" CssClass="form-control input-sm"
+                                onchange="javaScript:bindOnKeyUp1()">
+                                <asp:ListItem Text="0" Value="0"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-right">
+                            Quantity:
+                        </div>
+                        <div class="col-md-2">
+                            <asp:TextBox ID="txtQty" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                        </div>
+                        <div class="col-md-1 text-right" style="display: none">
+                            Style:
+                        </div>
+                        <div class="col-md-2">
+                            <asp:DropDownList ID="ddlStyle" runat="server" CssClass="form-control input-sm" onchange="javaScript:bindOnKeyUp1()"
+                                Style="display: none">
+                                <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-right labelMargin">
+                            Size:
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Quantity" id="llbL" class="text-center">
+                                    L</label>
+                                <asp:TextBox ID="txtLength" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-center labelMargin">
+                            X
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="width" id="lblW" class="text-center">
+                                    W</label>
+                                <asp:TextBox ID="txtWidth" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-center labelMargin" id="divX">
+                            X
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="Height" id="lblH" class="text-center">
+                                    H</label>
+                                <asp:TextBox ID="txtheight" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 text-right">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="BoardGrade">
+                                    Board Grade 
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Board Grade</h4>
+                                            32C – Standard Grade Board<br />
+                                            200C-  Standard Grade Single Wall<br />
+                                            44C-  Heavy Duty Single Wall<br />
+                                            48BC-  Heavy Duty Double Wall
+                                        </span>
+                                    </a>
+                                </label>
+                                <asp:DropDownList ID="ddlBroadGrade" runat="server" CssClass="form-control input-sm"
+                                    onchange="javaScript:bindOnKeyUp1()">
+                                    <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-right">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="BoardGrade">
+                                    Flip Corr Dir.
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Flip Corrugation Direction</h4>
+                                            You should only choose “Yes” for “Flip Corrugation Direction” if the corrugation direction does not matter (i.e. bookfold, tele trays, pad) Or it is a side loading box/tall box that would get laid on it is on its side.”
+                                        </span>
+                                    </a>
+                                </label>
+                                <asp:DropDownList ID="ddlFlip" runat="server" CssClass="form-control input-sm" onchange="javaScript:bindOnKeyUp1()">
+                                    <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" id="divBkf" style="display: none">
+                        <div class="col-md-2 text-right">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="BoardGrade">
+                                    Perforated?
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Perforated?</h4>
+                                            you should only choose “yes” for perforated for 0 or shallow depth Bookfolds, this will allow a cleaner edge and quicker fold, but it adds costs
+                                        </span>
+                                    </a>
+                                </label>
+                                <asp:DropDownList ID="ddlPerforated" runat="server" CssClass="form-control input-sm"
+                                    onchange="javaScript:bindOnKeyUp1()">
+                                    <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-right">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="BoardGrade">
+                                    Truck</label>
+                                <asp:TextBox ID="txtTruck" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-right">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="BoardGrade">
+                                    OverLap</label>
+                                <asp:TextBox ID="txtOveLap" runat="server" CssClass="form-control input-sm" onkeyup="javaScript:bindOnKeyUp1();"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="col-md-1 text-right">
+                        </div>
+                    </div>
+                </div>
+                <div class="space-10">
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <p class="text-right">
+                            *RFQ’s are for larger runs that are run traditionally. Longer lead times and minimum
+                            order size will apply.
+                            <br />
+                            *RFQ’s will email directly to <a href="mailto:quotes@korpack.com">quotes@korpack.com</a>,
+                            someone will reply shortly.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <asp:Label ID="lblStyleSelected" runat="server" Text="RSC" CssClass=""></asp:Label></h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center" id="imgLoad" style="min-height: 250px; margin-top: 10px;">
+                            <img src="../Images/box/1-L.png" alt="Box" id="defaultImg" class="img-responsive text-center" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                            Final Each Price: <span class="amountText">
+                                <asp:Label ID="FinalEachPrice" runat="server" Text="0.00" CssClass=""></asp:Label></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                            Total For This Qty.: <span class="amountText">
+                                <asp:Label ID="TotalForThisQty" runat="server" Text="0.00" CssClass=""></asp:Label>
+                                <asp:Label ID="lblCBHAutoId" runat="server" Text="0.00" CssClass="" Style="display: none"></asp:Label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row" style="display: none;">
+                        <asp:Label ID="lblCustomer" runat="server" Text="0" Style="color: yellow; font-size: 16px; display: none"></asp:Label>&nbsp;
+                        <asp:Label ID="lblStyle" runat="server" Text="1" Style="color: yellow; font-size: 16px; display: none"></asp:Label>&nbsp;
+                        <div class="col-md-12">
+                            <div id="columns">
+                                <ul id="column1" class="column" runat="server">
+                                    <asp:GridView ID="GridView1" runat="server" ShowHeader="true" AutoGenerateColumns="true"
+                                        CssClass="gridview display" AlternatingRowStyle-CssClass="gridviewaltrow" Width="100%">
+                                    </asp:GridView>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 col-lg-offset-3">
+                        <asp:Button ID="Button3" CssClass="btn btn-success btn-block" runat="server" Text="Calculate"
+                            OnClientClick="javaScript: return bindOnKeyUp();" />
+                    </div>
+                </div>
+                <div class="space-10">
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 col-lg-offset-3">
+                        <asp:Button ID="Button4" CssClass="btn btn-primary btn-block" runat="server" Text="Email My Quote"
+                            OnClick="btnProcessPO_Click" OnClientClick="javaScript: return CheckIfLoggedIn();" />
+                    </div>
+                </div>
+                <div class="space-10">
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 col-lg-offset-3">
+                        <asp:Button ID="Button6" CssClass="btn btn-primary btn-block"
+                            runat="server" Text="RFQ" OnClientClick="javaScript: return false;" data-toggle="modal" data-target="#RFQModal" />
+                    </div>
+                </div>
+                <div class="space-10">
+                </div>
+                <div class="row">
+                    <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12 col-lg-offset-3">
+                        <asp:Button ID="Button5" CssClass="btn btn-info btn-block" 
+                            runat="server" Text="Place Order" OnClientClick="javaScript: return false;" data-toggle="modal" data-target="#POModal"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5" style="display: none">
+                        <asp:Button ID="Button1" runat="server" Text="Calculate" OnClick="btnProcessPO_Click" />
+                        <asp:Button ID="Button2" runat="server" Text="Email My Quote" OnClick="btnProcessPO_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top: 10px; text-align: left;">
+        <div class="buttonSection" style="text-align: left; padding-left: 20px">
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="modal fade" id="RFQModal" tabindex="-1" role="dialog" aria-labelledby="RFQModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">RFQ</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h4>Inside Dimensions</h4>
+                        <div class="row" runat="server" id="rwPriceClassRFQ" style="display: none;">
+                            <div class="col-md-2 text-right">
+                                Price Class:
+                            </div>
+                            <div class="col-md-2">
+                                <asp:DropDownList ID="ddlPriceClassRFQ" runat="server" CssClass="form-control input-sm">
+                                    <asp:ListItem Text="0" Value="0"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 text-right">
+                                Style:
+                            </div>
+
+                            <div class="col-md-2">
+                                <asp:DropDownList ID="ddlStyleRFQ" runat="server" CssClass="form-control input-sm" onchange="javaScript:bindOnKeyUpForRFQDDL()">
+                                    <asp:ListItem Text="RSC" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="Bookfold" Value="2"></asp:ListItem>
+                                    <asp:ListItem Text="FOL" Value="4"></asp:ListItem>
+                                    <asp:ListItem Text="HSC" Value="5"></asp:ListItem>
+                                    <asp:ListItem Text="Pad/Scored Pad" Value="3"></asp:ListItem>
+                                    <asp:ListItem Text="5 Panel Folder" Value="10"></asp:ListItem>
+                                    <asp:ListItem Text="Tele Tray Set" Value="7"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-1 text-right">
+                                Quantity:
+                            </div>
+                            <div class="col-md-2">
+                                <asp:TextBox ID="txtQtyRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 text-right labelMargin">
+                                Size:
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Quantity" id="llbLRFQ" class="text-center">
+                                        L</label>
+                                    <asp:TextBox ID="txtLengthRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-center labelMargin">
+                                X
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="width" id="lblWRFQ" class="text-center">
+                                        W</label>
+                                    <asp:TextBox ID="txtWidthRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-center labelMargin" id="divXRFQ">
+                                X
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Height" id="lblHRFQ" class="text-center">
+                                        H</label>
+                                    <asp:TextBox ID="txtheightRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Board Grade 
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Board Grade</h4>
+                                            32C – Standard Grade Board<br />
+                                            200C-  Standard Grade Single Wall<br />
+                                            44C-  Heavy Duty Single Wall<br />
+                                            48BC-  Heavy Duty Double Wall
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlBroadGradeRFQ" runat="server" CssClass="form-control input-sm">
+                                        <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Flip Corr Dir.
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Flip Corrugation Direction</h4>
+                                            You should only choose “Yes” for “Flip Corrugation Direction” if the corrugation direction does not matter (i.e. bookfold, tele trays, pad) Or it is a side loading box/tall box that would get laid on it is on its side.”
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlFlipRFQ" runat="server" CssClass="form-control input-sm">
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" id="divBkfRFQ" style="display: none">
+                            <div class="col-md-2 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Perforated?
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Perforated?</h4>
+                                            you should only choose “yes” for perforated for 0 or shallow depth Bookfolds, this will allow a cleaner edge and quicker fold, but it adds costs
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlPerforatedRFQ" runat="server" CssClass="form-control input-sm">
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Truck</label>
+                                    <asp:TextBox ID="txtTruckRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        OverLap</label>
+                                    <asp:TextBox ID="txtOveLapRFQ" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <asp:Button ID="Button7" CssClass="btn btn-primary" OnClick="btnProcessPORFQ_Click"
+                        runat="server" Text="RFQ" OnClientClick="javaScript: return CheckIfLoggedIn();" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="POModal" tabindex="-1" role="dialog" aria-labelledby="POModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Order Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="row" runat="server" id="rwPriceClassPO">
+                            <div class="col-md-2 text-right">
+                                Enter PO#:
+                            </div>
+                            <div class="col-md-2">
+                                <asp:TextBox ID="txtPONumber" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <h4>Inside Dimensions</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-2 text-right">
+                                Style:
+                            </div>
+
+                            <div class="col-md-2">
+                                <asp:DropDownList ID="ddlStylePO" runat="server" CssClass="form-control input-sm" onchange="javaScript:bindOnKeyUpForPODDL()" Enabled="false">
+                                    <asp:ListItem Text="RSC" Value="1"></asp:ListItem>
+                                    <asp:ListItem Text="Bookfold" Value="2"></asp:ListItem>
+                                    <asp:ListItem Text="FOL" Value="4"></asp:ListItem>
+                                    <asp:ListItem Text="HSC" Value="5"></asp:ListItem>
+                                    <asp:ListItem Text="Pad/Scored Pad" Value="3"></asp:ListItem>
+                                    <asp:ListItem Text="5 Panel Folder" Value="10"></asp:ListItem>
+                                    <asp:ListItem Text="Tele Tray Set" Value="7"></asp:ListItem>
+                                </asp:DropDownList>
+                            </div>
+                            <div class="col-md-1 text-right">
+                                Quantity:
+                            </div>
+                            <div class="col-md-2">
+                                <asp:TextBox ID="txtQtyPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 text-right labelMargin">
+                                Size:
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Quantity" id="llbLPO" class="text-center">
+                                        L</label>
+                                    <asp:TextBox ID="txtLengthPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-center labelMargin">
+                                X
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="width" id="lblWPO" class="text-center">
+                                        W</label>
+                                    <asp:TextBox ID="txtWidthPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-center labelMargin" id="divXPO">
+                                X
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Height" id="lblHPO" class="text-center">
+                                        H</label>
+                                    <asp:TextBox ID="txtheightPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Board Grade 
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Board Grade</h4>
+                                            32C – Standard Grade Board<br />
+                                            200C-  Standard Grade Single Wall<br />
+                                            44C-  Heavy Duty Single Wall<br />
+                                            48BC-  Heavy Duty Double Wall
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlBroadGradePO" runat="server" CssClass="form-control input-sm" Enabled="false">
+                                        <asp:ListItem Text="1" Value="1"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Flip Corr Dir.
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Flip Corrugation Direction</h4>
+                                            You should only choose “Yes” for “Flip Corrugation Direction” if the corrugation direction does not matter (i.e. bookfold, tele trays, pad) Or it is a side loading box/tall box that would get laid on it is on its side.”
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlFlipPO" runat="server" CssClass="form-control input-sm" Enabled="false">
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row" id="divBkfPO" style="display: none">
+                            <div class="col-md-2 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Perforated?
+                                    <a class="tooltips" href="#">
+                                        <i class="fa fa-question-circle"></i>
+                                        <span><b></b>
+                                            <h4>Perforated?</h4>
+                                            you should only choose “yes” for perforated for 0 or shallow depth Bookfolds, this will allow a cleaner edge and quicker fold, but it adds costs
+                                        </span>
+                                    </a>
+                                    </label>
+                                    <asp:DropDownList ID="ddlPerforatedPO" runat="server" CssClass="form-control input-sm" Enabled="false">
+                                        <asp:ListItem Text="Yes" Value="1"></asp:ListItem>
+                                        <asp:ListItem Text="No" Value="0" Selected="True"></asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        Truck</label>
+                                    <asp:TextBox ID="txtTruckPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="BoardGrade">
+                                        OverLap</label>
+                                    <asp:TextBox ID="txtOveLapPO" runat="server" CssClass="form-control input-sm" Enabled="false"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                Final Each Price: <span class="amountText">
+                                <asp:Label ID="lblFinalPriceEachPO" runat="server" Text="0.00" CssClass=""></asp:Label></span>
+                            </div>
+                            <div class="col-md-1 text-right">
+                            </div>
+                            <div class="col-md-2">
+                                Total For This Qty.: <span class="amountText">
+                                <asp:Label ID="lblTotalPricePO" runat="server" Text="0.00" CssClass=""></asp:Label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <asp:Button ID="Button8" CssClass="btn btn-primary" OnClick="btnProcessOrder_Click"
+                        runat="server" Text="Place Order" OnClientClick="javaScript: return CheckIfLoggedIn();" />
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%-- 
+    <script type="text/javascript">
+        $(document).ready(function () {
+          
+            debugger;
+            agent.isOnline = false;
+            myHub = $.connection.chatHub;
+            myHub.server.changeStatus(agent.isOnline);
+            showStatus();
+        });        
+    </script>--%>
+</asp:Content>

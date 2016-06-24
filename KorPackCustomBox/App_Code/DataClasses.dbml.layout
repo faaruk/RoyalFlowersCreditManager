@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 11.875" name="DataClasses">
+  <DataContextMoniker Name="/DataClassesDataContext" />
+  <nestedChildShapes>
+    <classShape Id="d5ba6deb-e272-4d29-bcb5-8a233e46c0b7" absoluteBounds="0.75, 5.25, 2, 2.9247054036458326">
+      <DataClassMoniker Name="/DataClassesDataContext/Master_Credit" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c230a799-4791-4906-adf7-7b12e45d1d8c" absoluteBounds="0.765, 5.71, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="31bba868-49bd-4bd1-8b2c-703d2799c838" absoluteBounds="3.5, 1.375, 2, 2.9247054036458326">
+      <DataClassMoniker Name="/DataClassesDataContext/Master_Credit_Grid3" />
+      <nestedChildShapes>
+        <elementListCompartment Id="105e7dbb-c2eb-4a8b-963f-b6b7e85cf5bc" absoluteBounds="3.515, 1.835, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="3a300f2c-e215-40f2-86c9-8e695307c08e" absoluteBounds="3.5, 5, 2, 2.9247054036458326">
+      <DataClassMoniker Name="/DataClassesDataContext/Master_Credit_Grid1" />
+      <nestedChildShapes>
+        <elementListCompartment Id="efbb2524-4067-46aa-995d-01bc8c91afd5" absoluteBounds="3.515, 5.46, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="a1785001-d1da-43e6-ade3-a53a84372d07" absoluteBounds="3.5, 8.75, 2, 2.9247054036458309">
+      <DataClassMoniker Name="/DataClassesDataContext/Master_Credit_Grid2" />
+      <nestedChildShapes>
+        <elementListCompartment Id="7577ff20-7803-4452-a64a-b3b26bb36f5d" absoluteBounds="3.515, 9.21, 1.9700000000000002, 2.364705403645833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(1.75 : 5.25); (1.75 : 2.83735270182292); (3.5 : 2.83735270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClassesDataContext/Master_Credit/Master_Credit_Master_Credit_Grid3" />
+      <nodes>
+        <classShapeMoniker Id="d5ba6deb-e272-4d29-bcb5-8a233e46c0b7" />
+        <classShapeMoniker Id="31bba868-49bd-4bd1-8b2c-703d2799c838" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 6.58735270182292); (3.5 : 6.58735270182292)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClassesDataContext/Master_Credit/Master_Credit_Master_Credit_Grid1" />
+      <nodes>
+        <classShapeMoniker Id="d5ba6deb-e272-4d29-bcb5-8a233e46c0b7" />
+        <classShapeMoniker Id="3a300f2c-e215-40f2-86c9-8e695307c08e" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(1.75 : 8.17470540364583); (1.75 : 10.2123527018229); (3.5 : 10.2123527018229)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/DataClassesDataContext/Master_Credit/Master_Credit_Master_Credit_Grid2" />
+      <nodes>
+        <classShapeMoniker Id="d5ba6deb-e272-4d29-bcb5-8a233e46c0b7" />
+        <classShapeMoniker Id="a1785001-d1da-43e6-ade3-a53a84372d07" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

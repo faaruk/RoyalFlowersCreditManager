@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="Credit" Class="DataClassesDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=USER-PC\SQL2014;Initial Catalog=Credit;Persist Security Info=True;User ID=sa;Min Pool Size=5;Max Pool Size=1000;Connection Reset=True;MultipleActiveResultSets=True;Connect Timeout=6000;Load Balance Timeout=120" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CreditConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Master_Credit" Member="Master_Credits">
+    <Type Name="Master_Credit">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CustomerName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="BelegunNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="KundenNumber" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LieferDatum" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Rechnungsdatum" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Varkaufer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IhreUID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
+      <Column Name="LockStatus" Type="System.Boolean" CanBeNull="false" />
+      <Column Member="Comment" Type="System.String" CanBeNull="false" />
+      <Association Name="Master_Credit_Master_Credit_Grid3" Member="Master_Credit_Grid3s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid3" />
+      <Association Name="Master_Credit_Master_Credit_Grid1" Member="Master_Credit_Grid1s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid1" />
+      <Association Name="Master_Credit_Master_Credit_Grid2" Member="Master_Credit_Grid2s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid2" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Master_Credit_Grid3" Member="Master_Credit_Grid3s">
+    <Type Name="Master_Credit_Grid3">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Beschreibung" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Lange" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Züchter" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="VP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Menge" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Einheit" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Preis" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Steuer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Betrag" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="MasterId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Master_Credit_Master_Credit_Grid3" Member="Master_Credit" ThisKey="MasterId" OtherKey="Id" Type="Master_Credit" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Master_Credit_Grid1" Member="Master_Credit_Grid1s">
+    <Type Name="Master_Credit_Grid1">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Beschreibung" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Lange" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Züchter" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="VP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Menge" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Einheit" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Preis" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Steuer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Betrag" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="MasterId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Master_Credit_Master_Credit_Grid1" Member="Master_Credit" ThisKey="MasterId" OtherKey="Id" Type="Master_Credit" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Master_Credit_Grid2" Member="Master_Credit_Grid2s">
+    <Type Name="Master_Credit_Grid2">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Beschreibung" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Lange" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Züchter" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="VP" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Menge" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Einheit" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Preis" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="Steuer" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="Betrag" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="MasterId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Master_Credit_Master_Credit_Grid2" Member="Master_Credit" ThisKey="MasterId" OtherKey="Id" Type="Master_Credit" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
