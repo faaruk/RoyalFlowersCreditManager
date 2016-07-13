@@ -134,6 +134,8 @@ public partial class Master_Credit : INotifyPropertyChanging, INotifyPropertyCha
 	
 	private string _Comment;
 	
+	private bool _PostedStatus;
+	
 	private EntitySet<Master_Credit_Grid3> _Master_Credit_Grid3s;
 	
 	private EntitySet<Master_Credit_Grid1> _Master_Credit_Grid1s;
@@ -166,6 +168,8 @@ public partial class Master_Credit : INotifyPropertyChanging, INotifyPropertyCha
     partial void OnLockStatusChanged();
     partial void OnCommentChanging(string value);
     partial void OnCommentChanged();
+    partial void OnPostedStatusChanging(bool value);
+    partial void OnPostedStatusChanged();
     #endregion
 	
 	public Master_Credit()
@@ -392,6 +396,26 @@ public partial class Master_Credit : INotifyPropertyChanging, INotifyPropertyCha
 				this._Comment = value;
 				this.SendPropertyChanged("Comment");
 				this.OnCommentChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PostedStatus")]
+	public bool PostedStatus
+	{
+		get
+		{
+			return this._PostedStatus;
+		}
+		set
+		{
+			if ((this._PostedStatus != value))
+			{
+				this.OnPostedStatusChanging(value);
+				this.SendPropertyChanging();
+				this._PostedStatus = value;
+				this.SendPropertyChanged("PostedStatus");
+				this.OnPostedStatusChanged();
 			}
 		}
 	}

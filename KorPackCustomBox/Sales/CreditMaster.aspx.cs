@@ -141,6 +141,15 @@ public partial class Sales_InputFields : System.Web.UI.Page
                 hidLockStatus.Value = "0";
                 btnSave.Enabled = true;
             }
+            if (objMaster.PostedStatus == true)
+            {
+                chkPostedStatus.Checked = true;
+                //ddlKometPosted.SelectedValue = "1";
+            }
+            else {
+                chkPostedStatus.Checked = false;
+                //ddlKometPosted.SelectedValue = "0";
+            }
 
         }
     }
@@ -754,7 +763,10 @@ public partial class Sales_InputFields : System.Web.UI.Page
             objMaster.IhreUID = txtIhreUID.Text;
             int i = int.Parse(ddlLockStatus.SelectedItem.Value);
             objMaster.LockStatus = Convert.ToBoolean(i);
-            
+
+            //i = int.Parse(ddlKometPosted.SelectedItem.Value);
+            if (chkPostedStatus.Checked == true) { i = 1; } else { i = 0; };
+            objMaster.PostedStatus = Convert.ToBoolean(i);
             if (DSGrid1.Tables[0].Rows.Count > 0)
             {
                 objMaster.Master_Credit_Grid1s = ConvertToList(DSGrid1.Tables[0]);
@@ -820,6 +832,9 @@ public partial class Sales_InputFields : System.Web.UI.Page
             objMaster.IhreUID = txtIhreUID.Text;
             int i = int.Parse(ddlLockStatus.SelectedItem.Value);
             objMaster.LockStatus = Convert.ToBoolean(i);
+            if (chkPostedStatus.Checked == true) { i = 1; } else { i = 0; };
+            //i = int.Parse(ddlKometPosted.SelectedItem.Value);
+            objMaster.PostedStatus = Convert.ToBoolean(i);
 
             if (DSGrid1.Tables[0].Rows.Count > 0)
             {

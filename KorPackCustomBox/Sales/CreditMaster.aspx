@@ -46,6 +46,17 @@
                     <div class="col-md-8 space-4">
                         <textarea id="txtComment" class="form-control" rows="3" cols="250" runat="server"></textarea>
                     </div>
+                    <div class="col-md-4">
+                        <label class="control-label">Posted into Komet:</label>
+                    </div>
+                    <div class="col-md-8">
+                        <asp:CheckBox ID="chkPostedStatus" runat="server" />
+
+                        <%--<asp:DropDownList ID="ddlKometPosted" runat="server" class="form-control input-sm">
+                            <asp:ListItem Value="1">Yes</asp:ListItem>
+                            <asp:ListItem Selected="True" Value="0">No</asp:ListItem>
+                        </asp:DropDownList>--%>
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="col-md-4">

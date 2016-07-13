@@ -26,7 +26,7 @@ namespace StringEncodeDecode
         {
             if (Session["UserID"] == null)
             {
-                Response.Redirect("../Logout.aspx");
+                Response.Redirect("Logout.aspx");
             }
             else
             {

@@ -12,7 +12,8 @@
       <Column Name="IhreUID" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Column Name="Address" Type="System.String" DbType="VarChar(500)" CanBeNull="true" />
       <Column Name="LockStatus" Type="System.Boolean" CanBeNull="false" />
-      <Column Member="Comment" Type="System.String" CanBeNull="false" />
+      <Column Name="Comment" Type="System.String" CanBeNull="false" />
+      <Column Name="PostedStatus" Type="System.Boolean" CanBeNull="false" />
       <Association Name="Master_Credit_Master_Credit_Grid3" Member="Master_Credit_Grid3s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid3" />
       <Association Name="Master_Credit_Master_Credit_Grid1" Member="Master_Credit_Grid1s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid1" />
       <Association Name="Master_Credit_Master_Credit_Grid2" Member="Master_Credit_Grid2s" ThisKey="Id" OtherKey="MasterId" Type="Master_Credit_Grid2" />
