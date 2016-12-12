@@ -103,12 +103,14 @@
                             </div>
                             <div class="col-md-7">
                                 <ul class="nav nav-pills">
-                                    <li role="presentation"><a href="<%=ResolveUrl("~/Home.aspx") %>" class="menuTextColor">Home</a></li>
+                                    <%--<li role="presentation"><a href="<%=ResolveUrl("~/Home.aspx") %>" class="menuTextColor">Home</a></li>--%>
                                     <li role="presentation" style="display: none"><a class="menuTextColor" href="<%=ResolveUrl("~/Configuration/AboutUS.aspx") %>">About RFG</a></li>
                                     <li role="presentation" id="idchangepass" runat="server"><a class="menuTextColor"
                                         href="<%=ResolveUrl("~/Configuration/ChangePwd.aspx") %>">Change Password</a></li>
                                     <li role="presentation"><a href="<%=ResolveUrl("~/Sales/CreditList.aspx") %>"
                                         class="menuTextColor">Credit</a></li>
+                                    <li role="presentation"><a href="<%=ResolveUrl("~/Sales/CreditListExport.aspx") %>"
+                                        class="menuTextColor">Export Credit</a></li>
                                     <li role="presentation" id="idlogout" runat="server"><a class="menuTextColor" id="alogout"
                                         runat="server" href="~/Logout.aspx">Logout</a></li>
                                     <li role="presentation" id="idlogin" runat="server"><a class="menuTextColor" id="a1"

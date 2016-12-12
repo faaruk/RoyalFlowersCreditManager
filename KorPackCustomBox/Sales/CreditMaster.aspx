@@ -190,13 +190,13 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Menge">
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtMenge" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
+                                            <asp:TextBox ID="txtMenge" CssClass="Menge1" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
                                         </EditItemTemplate>
                                         <ItemTemplate>
                                             <asp:Label ID="lblMenge" runat="server" Text='<%#Eval("Menge") %>' />
                                         </ItemTemplate>
                                         <FooterTemplate>
-                                            <asp:TextBox ID="txtftrMenge" Width="50" runat="server" />
+                                            <asp:TextBox ID="txtftrMenge" CssClass="MengeF1" Width="50" runat="server" />
                                             <asp:RequiredFieldValidator ID="rfvMenge" runat="server" ControlToValidate="txtftrMenge" Text="*" ValidationGroup="validaiton1" />
                                         </FooterTemplate>
                                     </asp:TemplateField>
@@ -350,13 +350,13 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Menge">
                                     <EditItemTemplate>
-                                        <asp:TextBox ID="txtMenge" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
+                                        <asp:TextBox ID="txtMenge" CssClass="Menge2" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
                                     </EditItemTemplate>
                                     <ItemTemplate>
                                         <asp:Label ID="lblMenge" runat="server" Text='<%#Eval("Menge") %>' />
                                     </ItemTemplate>
                                     <FooterTemplate>
-                                        <asp:TextBox ID="txtftrMenge" Width="50" runat="server" />
+                                        <asp:TextBox ID="txtftrMenge" CssClass="MengeF2" Width="50" runat="server" />
                                         <asp:RequiredFieldValidator ID="rfvMenge" runat="server" ControlToValidate="txtftrMenge" Text="*" ValidationGroup="validaiton2" />
                                     </FooterTemplate>
                                 </asp:TemplateField>
@@ -509,13 +509,13 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Menge">
                                     <EditItemTemplate>
-                                        <asp:TextBox ID="txtMenge" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
+                                        <asp:TextBox ID="txtMenge" CssClass="Menge3" Width="50" runat="server" Text='<%#Eval("Menge") %>' />
                                     </EditItemTemplate>
                                     <ItemTemplate>
                                         <asp:Label ID="lblMenge" runat="server" Text='<%#Eval("Menge") %>' />
                                     </ItemTemplate>
                                     <FooterTemplate>
-                                        <asp:TextBox ID="txtftrMenge" Width="50" runat="server" />
+                                        <asp:TextBox ID="txtftrMenge" CssClass="MengeF3" Width="50" runat="server" />
                                         <asp:RequiredFieldValidator ID="rfvMenge" runat="server" ControlToValidate="txtftrMenge" Text="*" ValidationGroup="validaiton3" />
                                     </FooterTemplate>
                                 </asp:TemplateField>
@@ -612,16 +612,36 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
+            $('input.Menge1').blur(function () {
+                Calculate1();
+            });
+            $('input.Menge2').blur(function () {
+                Calculate2();
+            });
+            $('input.Menge3').blur(function () {
+                Calculate3();
+            });
+
             $('input.Preis1').blur(function () {
                 Calculate1();
             });
             $('input.Preis2').blur(function () {
                 Calculate2();
-                //Calculate3();
             });
             $('input.Preis3').blur(function () {
                 Calculate3();
             });
+
+            $('input.Einheit1').blur(function () {
+                Calculate1();
+            });
+            $('input.Einheit2').blur(function () {
+                Calculate2();
+            });
+            $('input.Einheit3').blur(function () {
+                Calculate3();
+            });
+
             $('input.PreisF1').blur(function () {
                 CalculateF1();
             });
@@ -631,31 +651,54 @@
             $('input.PreisF3').blur(function () {
                 CalculateF3();
             });
+
+            $('input.MengeF1').blur(function () {
+                CalculateF1();
+            });
+            $('input.MengeF2').blur(function () {
+                CalculateF2();
+            });
+            $('input.MengeF3').blur(function () {
+                CalculateF3();
+            });
+
+            $('input.EinheitF1').blur(function () {
+                CalculateF1();
+            });
+            $('input.EinheitF2').blur(function () {
+                CalculateF2();
+            });
+            $('input.EinheitF3').blur(function () {
+                CalculateF3();
+            });
         });
 
         function Calculate1() {
             $("#ctl00_ContentPlaceHolder1_gvDetails").find('tr').each(function () {
+                var iQty = $('input.Menge1').val();
                 var Qty = $('input.Einheit1').val();
                 var unit = $('input.Preis1').val();
-                var tot = Qty * unit;
+                var tot =iQty * Qty * unit;
                 $('input.Betrag1').val(tot);
             });
         }
 
         function Calculate2() {
             $("#ctl00_ContentPlaceHolder1_gvDetails2").find('tr').each(function () {
+                var iQty = $('input.Menge2').val();
                 var Qty = $('input.Einheit2').val();
                 var unit = $('input.Preis2').val();
-                var tot = Qty * unit;
+                var tot = iQty * Qty * unit;
                 $('input.Betrag2').val(tot);
             });
         }
 
         function Calculate3() {
             $("#ctl00_ContentPlaceHolder1_gvDetails3").find('tr').each(function () {
+                var iQty = $('input.Menge3').val();
                 var Qty = $('input.Einheit3').val();
                 var unit = $('input.Preis3').val();
-                var tot = Qty * unit;
+                var tot =iQty * Qty * unit;
                 $('input.Betrag3').val(tot);
             });
         }
@@ -663,10 +706,10 @@
         function CalculateF1() {
 
             $("#ctl00_ContentPlaceHolder1_gvDetails").find('tr').each(function () {
-
+                var iQty = $('input.MengeF1').val();
                 var Qty = $('input.EinheitF1').val();
                 var unit = $('input.PreisF1').val();
-                var tot = Qty * unit;
+                var tot = iQty * Qty * unit;
                 $('input.BetragF1').val(tot);
             });
         }
@@ -674,10 +717,10 @@
         function CalculateF2() {
 
             $("#ctl00_ContentPlaceHolder1_gvDetails2").find('tr').each(function () {
-
+                var iQty = $('input.MengeF2').val();
                 var Qty = $('input.EinheitF2').val();
                 var unit = $('input.PreisF2').val();
-                var tot = Qty * unit;
+                var tot =iQty * Qty * unit;
                 $('input.BetragF2').val(tot);
             });
         }
@@ -685,9 +728,10 @@
         function CalculateF3() {
 
             $("#ctl00_ContentPlaceHolder1_gvDetails3").find('tr').each(function () {
+                var iQty = $('input.MengeF3').val();
                 var Qty = $('input.EinheitF3').val();
                 var unit = $('input.PreisF3').val();
-                var tot = Qty * unit;
+                var tot = iQty * Qty * unit;
                 $('input.BetragF3').val(tot);
             });
         }
